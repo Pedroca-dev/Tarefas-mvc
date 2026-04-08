@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Home - Integração SGBD</title>
+</head>
+
+<body>
+   <h1>Lista de Tarefas</h1>
+
+   <button onclick="window.location='/cadastro'">Nova tarefa</button>
+
+   <br>
+   <br>
+   
+   <!-- 
+   Adicionar o botaão de excluir tarefa -> em ações
+    criar rota para exclusão
+    usar a exclusão lógica 
+   -->
+   
+   <table>
+       <thead>
+           <tr>
+               <th>ID</th>
+               <th>TAREFA</th>
+               <th>PRAZO</th>
+               <th>SITUAÇÃO</th>
+               <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            <%
+            let listaSituacao = ["Cancelada","Pendente","Iniciada","Finalizada","Em atraso"]
+            if(listaTarefas){
+                listaTarefas.forEach((item)=>{
+                    %>
+                    <tr>
+                        <td><%= item.id_tarefa %></td>
+                        <td><%= item.nome_tarefa %></td>
+                        <td><%= moment(item.prazo_tarefa).format("L") %></td>
+                        <td><%= listaSituacao[item.situacao_tarefa] %></td>
+                        <td><a href="/editar?id=<%= item.id_tarefa %>">Editar</a></td>
+                        </tr>
+        <%
+                });
+            }else{
+        %>
+        <tr>
+            <td colspan="5">Não há registros</td>
+        </tr>    
+        <%        
+            }
+        %>               
+        </tbody>
+    </table>
+
+</body>
+
+</html>
