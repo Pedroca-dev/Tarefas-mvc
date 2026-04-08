@@ -78,6 +78,11 @@ router.get("/teste-insert", async (req, res)=>{
         console.log(erro);
     }
 
+    router.delete('/nome_tarefa`,`prazo_tarefa`,`situacao_tarefa/:id 1, id 2, id 3', controller.deletartarefasModel);
+exports.deletarItem = (req, res) => {
+    const { id } = req.params;
+        res.status(200).json({ message: `Item ${id} deletado com sucesso` });
+
 });
 
 module.exports = router;

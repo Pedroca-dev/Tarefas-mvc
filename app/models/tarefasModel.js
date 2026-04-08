@@ -57,10 +57,27 @@ const tarefasModel = {
             return erro;
         }
     }
+}
+const tarefasModel = require('./taskSchema');
 
+const deletarTarefaFisica = async (id) => {
+    return await tarefasModel.findByIdAndDelete(id);
+};
+
+const Task = require('./taskSchema');
+
+const deletarTarefaLogica = async (id) => {
+    return await Task.findByIdAndUpdate(id, { 
+        ativo: false, 
+        deletadoEm: new Date() 
+    }, { new: true });
+};
+
+const listarTarefasAtivas = async () => {
+    return await tarefasModel.find({ ativo: true });
+};
     //faltam os seguintes métodos:  delete fisico, delete lógico 
 
-}
 
 //exportar o objeto como um módulo do js
 //uso da chave indica a obrigatoriedade de manter o mesmo nome na utilização
