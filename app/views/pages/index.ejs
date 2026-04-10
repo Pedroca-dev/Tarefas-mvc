@@ -5,59 +5,54 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> Home - Integração SGBD</title>
+    <title> Home - Lista Tarefas</title>
 </head>
 
 <body>
-   <h1>Lista de Tarefas</h1>
+    <h1>Lista de Tarefas</h1>
 
-   <button onclick="window.location='/cadastro'">Nova tarefa</button>
-
-   <br>
-   <br>
-   
-   <!-- 
-   Adicionar o botão de excluir tarefa -> em ações
-    criar rota para exclusão
-    usar a exclusão lógica 
-   -->
-   
-   <table>
-       <thead>
-           <tr>
-               <th>ID</th>
-               <th>TAREFA</th>
-               <th>PRAZO</th>
-               <th>SITUAÇÃO</th>
-               <th>Ações</th>
+    <button onclick="window.location='/nova-tarefa'">Nova tarefa</button> 
+    <br>
+    <br>
+    <table> 
+        <thead>
+            <tr>
+                <th>ID tarefa</th>
+                <th>Nome tarefa</th>
+                <th>Prazo tarefa</th>
+                <th>Situação tarefa</th>
+                <th>Ações</th>
             </tr>
         </thead>
         <tbody>
-            <%
-            let listaSituacao = ["Cancelada","Pendente","Iniciada","Finalizada","Em atraso"]
-            if(listaTarefas){
-                listaTarefas.forEach((item)=>{
+
+            <% if(listaTarefas){ 
+                let situacao = ["Cancelada","Pendente","Iniciada","Finalizada","Em Atraso"]
+                listaTarefas.forEach( (item)=>{
                     %>
-                    <tr>
-                        <td><%= item.id_tarefa %></td>
-                        <td><%= item.nome_tarefa %></td>
-                        <td><%= moment(item.prazo_tarefa).format("L") %></td>
-                        <td><%= listaSituacao[item.situacao_tarefa] %></td>
-                        <td><a href="/editar?id=<%= item.id_tarefa %>">Editar</a></td>
-                        </tr>
-        <%
+                <tr>
+                    <td><%= item.id_tarefa %></td>
+                    <td><%= item.nome_tarefa %></td>
+                    <td><%= moment(item.prazo_tarefa).format('L') %></td>
+                    <td><%= situacao[item.situacao_tarefa] %></td>
+                    <td><a href="/editar?id=<%= item.id_tarefa %>">Editar</a></td>
+                </tr>
+            <% 
                 });
-            }else{
-        %>
-        <tr>
-            <td colspan="5">Não há registros</td>
-        </tr>    
-        <%        
-            }
-        %>               
+            }else{ %>
+                    <tr colspan="5">
+                        <td>Sem tarefas para exibir</td>
+                    </tr>
+            <% } %>
         </tbody>
     </table>
 
 </body>
 
 </html>
+
+<!--
+ pesquisar o módulo moment
+ uasr o moment para exibir a data 
+ no padrão pt-br
+  -->

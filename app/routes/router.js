@@ -1,88 +1,101 @@
-const express = require("express");
-const router = express.Router();
+var express = require("express");
+var router = express.Router();
+const { tarefasModel } = require("../models/tarefasModel"); //usar sempre o {}
 const moment = require("moment");
-moment.locale("pt-br");
-//requisição do Model
-// usar a chave e o mesmo nome do objeto exportado
-const {tarefasModel} = require("../models/tarefasModel");
+moment.locale('pt-br');
 
 router.get("/", async function (req, res) {
     res.locals.moment = moment;
-    try{
-        const linhas = await tarefasModel.findAll();
-        res.render("pages/index", {listaTarefas:linhas});
-    }catch(erro){
+    try {
+        const result = await tarefasModel.findAll();
+        console.log(result)
+        res.render("pages/index", { listaTarefas: result })
+    } catch (erro) {
         console.log(erro);
     }
 });
 
 
-router.get("/cadastro", (req, res)=>{
+router.get("/nova-tarefa", (req, res) => {
     res.locals.moment = moment;
-    res.render("pages/cadastro", {tarefa:{id_tarefa:"",nome_tarefa:"",prazo_tarefa:"",situacao_tarefa:1},
-        titulo:"Nova Tarefa",
-        id_tarefa:0
-    });
-});
-
-router.get("/editar", async (req, res)=>{
-    res.locals.moment = moment;
-    let id = req.query.id;
-    try{
-        const tarefa = await tarefasModel.findById(id);
-        res.render("pages/cadastro", 
-            {tarefa:tarefa[0],
-            titulo:"Editar Tarefa",
-            id_tarefa:id
+    res.render("pages/cadastro",
+        {
+            tituloPagina: "Cadastro de Tarefas", tituloAba: "Cadastro",
+            tarefa: {
+                id_tarefa: 0, nome_tarefa: "",
+                prazo_tarefa: "", situacao_tarefa: 1
+            }
         });
-    }catch(erro){
-        console.log(erro)
-    }
 });
 
-
-
-
-
-router.post("/cadastro", async (req, res)=>{
-    // adicionar a validação com express-validator
-    const dados = {
-        nome: req.body.tarefa,
+router.post("/manter-tarefa", async (req, res) => {
+    const objDados = {
+        id : req.body.id,
+        nome: req.body.nome,
         prazo: req.body.prazo,
         situacao: req.body.situacao
     }
-    const id = req.body.id_tarefa;
-    try{
-        if(id == 0){
-            var result = await tarefasModel.create(dados);
+
+    try {
+        if(objDados.id == 0){
+            const result = await tarefasModel.create(objDados);  
         }else{
-            var result = await tarefasModel.update(dados, id);
+            const result = await tarefasModel.update(objDados);  
         }
-        console.log(result);
+        
         res.redirect("/");
-    }catch(erro){
-        console.log(erro)
+    } catch (erro) {
+        console.log(erro);
     }
 })
 
 
-router.get("/teste-insert", async (req, res)=>{
-    const dados = {
-        nome:"instalar o MySQL no lab 3 e lab 4",
-        prazo:"2026-03-18"
+router.get("/editar", async (req, res) => {
+    res.locals.moment = moment;
+    //recuperando a querystring
+    const id = req.query.id;
+    try {
+        const result = await tarefasModel.findById(id);
+        res.render("pages/cadastro",
+            {
+                tituloPagina: "Alterar Tarefa", tituloAba: "Edição de Tarefa",
+                tarefa: result[0]
+            });
+    } catch (erro) {
+        console.log(erro)
     }
-    try{
-        const resultado = await tarefasModel.create(dados);
-        res.send(resultado);
-    }catch(erro){
-        console.log(erro);
-    }
-
-    router.delete('/nome_tarefa`,`prazo_tarefa`,`situacao_tarefa/:id 1, id 2, id 3', controller.deletartarefasModel);
-exports.deletarItem = (req, res) => {
-    const { id } = req.params;
-        res.status(200).json({ message: `Item ${id} deletado com sucesso` });
 
 });
+
+
+router.get("/teste-insert", async (req, res) => {
+
+    const objDados = {
+        nome: "limpar gabinete PC",
+        prazo: "2026-03-23"
+    }
+    try {
+        const result = await tarefasModel.create(objDados);
+        res.send(result);
+    } catch (erro) {
+        console.log(erro);
+    }
+});
+
+//exclusão física - hard delete
+router.get("/teste-delete", async (req, res) => {
+
+
+
+})
+
+//exclusão lógica - soft delete
+router.get("/teste-delete-logico", async (req, res) => {
+
+
+})
+
+
+
 
 module.exports = router;
